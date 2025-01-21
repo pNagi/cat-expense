@@ -4,12 +4,13 @@ import prettier from "eslint-plugin-prettier/recommended";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import storybook from "eslint-plugin-storybook";
 import tailwind from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
 const config = tseslint.config(
-  { ignores: ["dist"] },
+  { ignores: ["dist", "!.storybook"] },
   {
     files: ["**/*.{js,cjs,mjs,ts,tsx}"],
     extends: [
@@ -61,6 +62,10 @@ const config = tseslint.config(
       ],
     },
     settings: { react: { version: "19.0" } },
+  },
+  {
+    files: ["**/*.stories.tsx"],
+    extends: storybook.configs["flat/recommended"],
   },
   prettier,
 );
