@@ -20,6 +20,9 @@
   },
   "typescript.preferences.importModuleSpecifier": "relative",
   "javascript.preferences.importModuleSpecifier": "relative",
+  "files.associations": {
+    "*.css": "tailwindcss"
+  },
   "files.eol": "\n",
   "search.exclude": {
     "**/node_modules": true,

@@ -3,6 +3,7 @@
     "dbaeumer.vscode-eslint",
     "esbenp.prettier-vscode",
     "wayou.vscode-todo-highlight",
-    "pflannery.vscode-versionlens"
+    "pflannery.vscode-versionlens",
+    "bradlc.vscode-tailwindcss"
   ]
 }

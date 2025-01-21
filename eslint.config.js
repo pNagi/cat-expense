@@ -4,6 +4,7 @@ import prettier from "eslint-plugin-prettier/recommended";
 import react from "eslint-plugin-react";
 import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
+import tailwind from "eslint-plugin-tailwindcss";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -30,6 +31,7 @@ const config = tseslint.config(
     extends: [
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
+      ...tailwind.configs["flat/recommended"],
     ],
     languageOptions: {
       ecmaVersion: 2020,
