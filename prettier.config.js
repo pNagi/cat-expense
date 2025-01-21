@@ -6,4 +6,5 @@ export default {
   plugins: ["prettier-plugin-tailwindcss"],
   singleQuote: false,
   tabWidth: 2,
+  tailwindFunctions: ["twMerge"],
 };
