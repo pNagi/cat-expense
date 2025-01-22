@@ -6,12 +6,14 @@ import {
   itemSchema,
 } from "./schema";
 
+// FUTURE: To use for unfocus validation
 export function validateAmount(value?: FormDataEntryValue | null) {
   return amountSchema
     .safeParse(convertEntryValueToString(value))
     .error?.flatten().formErrors;
 }
 
+// FUTURE: To use for unfocus validation
 export function validateCategoryId(value?: FormDataEntryValue | null) {
   return categoryIdSchema
     .safeParse(convertEntryValueToString(value))
@@ -30,6 +32,7 @@ export function validateExpenseDetail(formData: FormData) {
   return { data, validatedData };
 }
 
+// FUTURE: To use for unfocus validation
 export function validateItem(value?: FormDataEntryValue | null) {
   return itemSchema.safeParse(convertEntryValueToString(value)).error?.flatten()
     .formErrors;

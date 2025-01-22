@@ -1,8 +1,31 @@
 import { intentionallyDelay } from "../../utils/delay";
 import { ExpenseDetail } from "./schema";
-import { saveExpenseDetail } from "./storage";
-import { ActionResponse } from "./types";
+import { deleteExpenseDetails, saveExpenseDetail } from "./storage";
+import { ActionResponse, BaseActionReseponse } from "./types";
 import { validateExpenseDetail } from "./validator";
+
+export async function submitDeleteExpenseDetails(
+  _: BaseActionReseponse | null,
+  formData: FormData,
+): Promise<BaseActionReseponse> {
+  const ids = formData.getAll("ids").map(Number);
+
+  if (!ids.length) {
+    return { success: false };
+  }
+
+  try {
+    deleteExpenseDetails(ids);
+    await intentionallyDelay(); // Simulate network delay
+
+    return { success: true };
+  } catch (error) {
+    // IMPROVEMENT: Change console.error to proper log
+    console.error(error);
+
+    return { success: false };
+  }
+}
 
 export async function submitExpenseDetail(
   _: ActionResponse<ExpenseDetail> | null,

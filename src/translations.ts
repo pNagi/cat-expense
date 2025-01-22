@@ -31,6 +31,10 @@ export const t = {
   addButton: {
     text: "Add Expense",
   },
+  deleteButton: {
+    text: "Delete Expense",
+    pendingText: "Deleting",
+  },
   errors: {
     somethingWentWrong: {
       text: "Something went wrong",
