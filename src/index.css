@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root:has(
+    :is(
+      .modal-open,
+      .modal:target,
+      .modal-toggle:checked + .modal,
+      .modal[open]
+    )
+  ) {
+  /* daisyUI set scrollbar-gutter to stable only when modal is open
+     causing UI to shift when dialog is opened */
+  scrollbar-gutter: unset;
+}

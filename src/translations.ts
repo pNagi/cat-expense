@@ -22,4 +22,12 @@ export const t = {
     text: "Submit",
     pendingText: "Submitting",
   },
+  addButton: {
+    text: "Add Expense",
+  },
+  errors: {
+    somethingWentWrong: {
+      text: "Something went wrong",
+    },
+  },
 };
