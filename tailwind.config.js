@@ -5,7 +5,6 @@ export default {
   content: ["./index.html", "./src/**/*.{ts,tsx}"],
   plugins: [daisyui],
   daisyui: {
-    themes: ["emerald", "night"],
+    themes: ["bumblebee"],
   },
-  darkMode: ["class", '[data-theme="night"]'],
 };
