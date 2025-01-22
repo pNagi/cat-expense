@@ -1,41 +1,48 @@
-import "./App.css";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import React from "react";
 
-import { useState } from "react";
+import { ExpensePage } from "./pages/ExpensePage";
 
-import reactLogo from "./assets/react.svg";
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnMount: false,
+      refetchOnReconnect: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
-import viteLogo from "/vite.svg";
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import("@tanstack/react-query-devtools/build/modern/production.js").then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    }),
+  ),
+);
 
 function App() {
-  const [count, setCount] = useState(0);
+  const [showDevtools, setShowDevtools] = React.useState(false);
+
+  React.useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
+    window.toggleDevtools = () => {
+      setShowDevtools((old) => !old);
+    };
+  }, []);
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button
-          onClick={() => {
-            setCount((count) => count + 1);
-          }}
-        >
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <ExpensePage />
+      <ReactQueryDevtools initialIsOpen={false} />
+      {showDevtools && (
+        <React.Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </React.Suspense>
+      )}
+    </QueryClientProvider>
   );
 }
 

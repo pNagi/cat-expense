@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import query from "@tanstack/eslint-plugin-query";
 import perfectionist from "eslint-plugin-perfectionist";
 import prettier from "eslint-plugin-prettier/recommended";
 import react from "eslint-plugin-react";
@@ -33,6 +34,7 @@ const config = tseslint.config(
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
       ...tailwind.configs["flat/recommended"],
+      ...query.configs["flat/recommended"],
     ],
     languageOptions: {
       ecmaVersion: 2020,
