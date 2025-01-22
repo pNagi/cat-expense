@@ -1,4 +1,4 @@
 {
-  "*.{js,cjs,mjs,ts,tsx}": ["eslint --fix", "vitest run"],
+  "*.{js,cjs,mjs,ts,tsx}": ["eslint --fix", "vitest run --passWithNoTests"],
   "*.{json,html}": "prettier --write"
 }
