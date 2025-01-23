@@ -3,8 +3,8 @@ import { twMerge } from "tailwind-merge";
 interface SubmitButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   text: string;
-  pendingText: string;
-  isPending: boolean;
+  pendingText?: string;
+  isPending?: boolean;
 }
 
 export function SubmitButton({
@@ -23,7 +23,7 @@ export function SubmitButton({
         props.className,
       )}
     >
-      {isPending ? (
+      {isPending && pendingText ? (
         <>
           <span className="loading loading-spinner"></span> {pendingText}
         </>

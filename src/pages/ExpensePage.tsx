@@ -48,11 +48,11 @@ export function ExpensePage() {
           {/* Right Section */}
           <div className="w-full basis-2/5 place-items-center">
             {catFact.isFetching ? (
-              <span className="loading loading-spinner loading-lg"></span>
+              <span className="loading loading-spinner"></span>
             ) : (
-              <span>
-                {catFact.data?.fact ?? t.errors.somethingWentWrong.text}
-              </span>
+              <blockquote className="prose">
+                <p>{catFact.data?.fact ?? t.errors.somethingWentWrong.text}</p>
+              </blockquote>
             )}
           </div>
         </div>
@@ -60,7 +60,7 @@ export function ExpensePage() {
         <ModalCloseButton onClick={closeModal} />
       </Modal>
       {/* Delete Form */}
-      <form action={deleteForm.action} className="mx-auto max-w-screen-lg">
+      <form action={deleteForm.action} className="mx-auto max-w-screen-md">
         {/* Header */}
         <div className="flex gap-4 py-12">
           {/* Add Button */}
@@ -68,12 +68,7 @@ export function ExpensePage() {
             {t.addButton.text}
           </button>
           {/* Delete Button */}
-          <SubmitButton
-            className="btn-outline"
-            text={t.deleteButton.text}
-            pendingText={t.deleteButton.pendingText}
-            isPending={deleteForm.isPending}
-          />
+          <SubmitButton className="btn-outline" text={t.deleteButton.text} />
         </div>
         {/* Table */}
         <ExpenseTable

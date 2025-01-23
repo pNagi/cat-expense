@@ -22,14 +22,14 @@ const initialState = {
 };
 
 const formatter = new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
 });
 
-const badgeColor = {
-  [CategoryId.Food]: "badge-primary",
-  [CategoryId.Furniture]: "badge-secondary",
-  [CategoryId.Accessory]: "badge-accent",
+const badgeColors = {
+  [CategoryId.Food]: ["badge-primary", "text-primary-800"],
+  [CategoryId.Furniture]: ["badge-secondary", "text-secondary-800"],
+  [CategoryId.Accessory]: ["badge-warning", "text-yellow-800"],
 };
 
 export function ExpenseTable({
@@ -82,20 +82,20 @@ export function ExpenseTable({
     // Recalculate 'all' when new expense detail is added
     setState({
       ...state,
-      all: state.size === expenseDetails.length,
+      all: !!expenseDetails.length && state.size === expenseDetails.length,
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenseDetails.length]);
 
   return (
-    <div className="table min-h-96 w-full">
-      <table className="table w-full">
-        <thead>
+    <div className="min-h-96 w-full">
+      <table className="table w-full table-fixed">
+        <thead className="bg-zinc-100">
           <tr>
-            <th>
+            <th className="w-14 max-w-fit">
               <label>
                 <input
-                  className="checkbox"
+                  className="checkbox bg-white"
                   type="checkbox"
                   name="all"
                   checked={state.all}
@@ -103,10 +103,12 @@ export function ExpenseTable({
                 />
               </label>
             </th>
-            <th>{t.expenseDetail.item.label}</th>
-            <th>{t.expenseDetail.category.label}</th>
-            <th>{t.expenseDetail.amount.label}</th>
-            <th></th>
+            <th className="w-2/4">
+              <span>{t.expenseDetail.item.label}</span>
+            </th>
+            <th className="w-1/4">{t.expenseDetail.category.label}</th>
+            <th className="w-1/4 text-right">{t.expenseDetail.amount.label}</th>
+            <th className="w-16"></th>
           </tr>
         </thead>
         <tbody>
@@ -114,16 +116,15 @@ export function ExpenseTable({
             <tr
               key={id}
               className={twMerge(
-                topCategoryId === categoryId
-                  ? ["bg-yellow-50", "hover:bg-yellow-100"]
-                  : ["hover:bg-slate-50"],
+                ["hover:bg-orange-50"],
+                topCategoryId === categoryId && ["bg-yellow-50"],
               )}
             >
               <th>
                 <label>
                   <input
                     type="checkbox"
-                    className="checkbox"
+                    className="checkbox bg-white"
                     name="ids"
                     value={id}
                     checked={!!state.checked[id]}
@@ -133,11 +134,11 @@ export function ExpenseTable({
               </th>
               <td>{item}</td>
               <td>
-                <span className={twMerge("badge", badgeColor[categoryId])}>
+                <span className={twMerge("badge", badgeColors[categoryId])}>
                   {t.categories[categoryId]}
                 </span>
               </td>
-              <td>{formatter.format(amount)}</td>
+              <td className={"text-right"}>{formatter.format(amount)}</td>
               <td>{topCategoryId === categoryId ? t.max : null}</td>
             </tr>
           ))}
