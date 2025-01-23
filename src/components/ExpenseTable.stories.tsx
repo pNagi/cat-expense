@@ -8,7 +8,7 @@ import { ExpenseTable } from "./ExpenseTable";
 const meta: Meta<typeof ExpenseTable> = {
   title: "Expense / ExpenseTable",
   component: ExpenseTable,
-  args: { expenseDetails: [], maxCategoryAmount: {}, maxAmount: 0 },
+  args: { expenseDetails: [], topCategoryId: undefined },
 };
 
 export default meta;
@@ -24,16 +24,18 @@ const expenseDetails: Expense["expenseDetails"] = faker.helpers
   }))
   .reverse();
 
-const maxCategoryAmount: Expense["maxCategoryAmount"] = {};
+const sumCategoryAmount: Expense["sumCategoryAmount"] = {};
 
-let max = 0;
+let topCategoryId: number | undefined = undefined;
 
 expenseDetails.forEach((d) => {
-  maxCategoryAmount[d.categoryId] = Math.max(
-    maxCategoryAmount[d.categoryId] ?? 0,
-    d.amount,
-  );
-  max = Math.max(max, d.amount);
+  const newSum = (sumCategoryAmount[d.categoryId] ?? 0) + d.amount;
+
+  sumCategoryAmount[d.categoryId] = newSum;
+
+  if (newSum > (sumCategoryAmount[topCategoryId ?? -1] ?? -1)) {
+    topCategoryId = d.categoryId;
+  }
 });
 
 export const Empty: Story = {
@@ -45,9 +47,9 @@ export const EmptyLoading: Story = {
 };
 
 export const WithValue: Story = {
-  args: { expenseDetails, maxCategoryAmount, maxAmount: max },
+  args: { expenseDetails, topCategoryId },
 };
 
 export const WithValueLoading: Story = {
-  args: { expenseDetails, maxCategoryAmount, maxAmount: max, isLoading: true },
+  args: { expenseDetails, topCategoryId, isLoading: true },
 };

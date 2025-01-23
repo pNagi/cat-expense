@@ -78,8 +78,7 @@ export function ExpensePage() {
         {/* Table */}
         <ExpenseTable
           expenseDetails={expense.data?.expenseDetails ?? []}
-          maxCategoryAmount={expense.data?.maxCategoryAmount ?? {}}
-          maxAmount={expense.data?.maxAmount ?? 0}
+          topCategoryId={expense.data?.topCategoryId}
           isLoading={expense.isLoading || deleteForm.isPending}
         />
       </form>

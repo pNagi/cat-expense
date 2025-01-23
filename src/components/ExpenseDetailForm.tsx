@@ -43,6 +43,7 @@ export function ExpenseDetailForm({
       />
       {/* Select Input */}
       <FormElement
+        key={state.data?.categoryId ?? CategoryId.Food}
         inputType="select"
         inputProps={{
           name: "categoryId",

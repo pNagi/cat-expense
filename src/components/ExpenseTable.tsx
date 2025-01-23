@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
-import { Expense } from "../api/expense/schema";
+import { CategoryId, Expense } from "../api/expense/schema";
 import { t } from "../translations";
 
 interface ExpenseTableProps
-  extends Pick<Expense, "expenseDetails" | "maxAmount" | "maxCategoryAmount"> {
+  extends Pick<Expense, "expenseDetails" | "topCategoryId"> {
   isLoading: boolean;
 }
 
@@ -25,10 +26,15 @@ const formatter = new Intl.NumberFormat("en-US", {
   currency: "USD",
 });
 
+const badgeColor = {
+  [CategoryId.Food]: "badge-primary",
+  [CategoryId.Furniture]: "badge-secondary",
+  [CategoryId.Accessory]: "badge-accent",
+};
+
 export function ExpenseTable({
   expenseDetails,
-  maxCategoryAmount,
-  maxAmount,
+  topCategoryId,
   isLoading,
 }: ExpenseTableProps) {
   const [state, setState] = useState<State>(initialState);
@@ -82,66 +88,66 @@ export function ExpenseTable({
   }, [expenseDetails.length]);
 
   return (
-    <table className="table min-h-96 w-full">
-      <thead>
-        <tr>
-          <th>
-            <label>
-              <input
-                className="checkbox"
-                type="checkbox"
-                name="all"
-                checked={state.all}
-                onChange={toggleAll}
-              />
-            </label>
-          </th>
-          <th>{t.expenseDetail.item.label}</th>
-          <th>{t.expenseDetail.category.label}</th>
-          <th>{t.expenseDetail.amount.label}</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        {expenseDetails.map(({ id, item, categoryId, amount }) => (
-          <tr key={id} className="hover">
+    <div className="table min-h-96 w-full">
+      <table className="table w-full">
+        <thead>
+          <tr>
             <th>
               <label>
                 <input
-                  type="checkbox"
                   className="checkbox"
-                  name="ids"
-                  value={id}
-                  checked={!!state.checked[id]}
-                  onChange={toggleItem(id)}
+                  type="checkbox"
+                  name="all"
+                  checked={state.all}
+                  onChange={toggleAll}
                 />
               </label>
             </th>
-            <td>{item}</td>
-            <td>
-              <span className="badge badge-ghost">
-                {t.categories[categoryId]}
-              </span>
-            </td>
-            <td>{formatter.format(amount)}</td>
-            <td>
-              {maxAmount === amount ? (
-                <span className="badge badge-ghost">{t.max}</span>
-              ) : null}
-              {maxCategoryAmount[categoryId] === amount ? (
-                <span className="badge badge-ghost">
-                  {t.maxCategory[categoryId]}
-                </span>
-              ) : null}
-            </td>
+            <th>{t.expenseDetail.item.label}</th>
+            <th>{t.expenseDetail.category.label}</th>
+            <th>{t.expenseDetail.amount.label}</th>
+            <th></th>
           </tr>
-        ))}
-      </tbody>
+        </thead>
+        <tbody>
+          {expenseDetails.map(({ id, item, categoryId, amount }) => (
+            <tr
+              key={id}
+              className={twMerge(
+                topCategoryId === categoryId
+                  ? ["bg-yellow-50", "hover:bg-yellow-100"]
+                  : ["hover:bg-slate-50"],
+              )}
+            >
+              <th>
+                <label>
+                  <input
+                    type="checkbox"
+                    className="checkbox"
+                    name="ids"
+                    value={id}
+                    checked={!!state.checked[id]}
+                    onChange={toggleItem(id)}
+                  />
+                </label>
+              </th>
+              <td>{item}</td>
+              <td>
+                <span className={twMerge("badge", badgeColor[categoryId])}>
+                  {t.categories[categoryId]}
+                </span>
+              </td>
+              <td>{formatter.format(amount)}</td>
+              <td>{topCategoryId === categoryId ? t.max : null}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
       {isLoading ? (
         <div className="absolute inset-0 z-10 flex size-full items-center justify-center bg-white/30 backdrop-blur-sm">
           <span className="loading loading-spinner"></span>
         </div>
       ) : null}
-    </table>
+    </div>
   );
 }

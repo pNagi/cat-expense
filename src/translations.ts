@@ -18,12 +18,7 @@ export const t = {
       placeholder: "10",
     },
   },
-  max: "Top Cat",
-  maxCategory: {
-    0: "Top Food",
-    1: "Top Furniture",
-    2: "Top Accessory",
-  },
+  max: "🐈",
   submitButton: {
     text: "Submit",
     pendingText: "Submitting",

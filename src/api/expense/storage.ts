@@ -13,24 +13,25 @@ export function deleteExpenseDetails(expenseDetailIds: number[]) {
 
   const newExpense: Expense = {
     expenseDetails: [],
-    maxCategoryAmount: {},
-    maxAmount: 0,
+    sumCategoryAmount: {},
+    topCategoryId: undefined,
     lastId: currentExpense.lastId,
   };
 
-  currentExpense.expenseDetails.forEach((expenseDetail) => {
-    if (!expenseDetailIds.includes(expenseDetail.id)) {
-      const currentMaxAmount =
-        newExpense.maxCategoryAmount[expenseDetail.categoryId];
+  currentExpense.expenseDetails.forEach((d) => {
+    if (!expenseDetailIds.includes(d.id)) {
+      newExpense.expenseDetails.push(d);
 
-      newExpense.expenseDetails.push(expenseDetail);
-      newExpense.maxCategoryAmount[expenseDetail.categoryId] = currentMaxAmount
-        ? Math.max(currentMaxAmount, expenseDetail.amount)
-        : expenseDetail.amount;
-      newExpense.maxAmount = Math.max(
-        newExpense.maxAmount,
-        expenseDetail.amount,
-      );
+      const newSum =
+        (newExpense.sumCategoryAmount[d.categoryId] ?? 0) + d.amount;
+      const topSum =
+        newExpense.sumCategoryAmount[newExpense.topCategoryId ?? -1] ?? -1;
+
+      newExpense.sumCategoryAmount[d.categoryId] = newSum;
+
+      if (newSum > topSum) {
+        newExpense.topCategoryId = d.categoryId;
+      }
     }
   });
 
@@ -60,28 +61,21 @@ export function getExpense(): Expense | undefined {
   return undefined;
 }
 
-export function saveExpenseDetail(newExpenseDetail: Omit<ExpenseDetail, "id">) {
-  const currentExpense = getExpense();
-  const currentMaxAmount =
-    currentExpense?.maxCategoryAmount[newExpenseDetail.categoryId];
+export function saveExpenseDetail(d: Omit<ExpenseDetail, "id">) {
+  const existing = getExpense();
 
-  const newId = (currentExpense?.lastId ?? -1) + 1;
+  const newId = (existing?.lastId ?? -1) + 1;
+  const newSum = (existing?.sumCategoryAmount[d.categoryId] ?? 0) + d.amount;
+  const topSum =
+    existing?.sumCategoryAmount[existing.topCategoryId ?? -1] ?? -1;
+
   const newExpense: Expense = {
-    expenseDetails: [
-      { id: newId, ...newExpenseDetail },
-      ...(currentExpense?.expenseDetails ?? []),
-    ],
-    maxCategoryAmount: {
-      ...(currentExpense?.maxCategoryAmount ?? {}),
-      [newExpenseDetail.categoryId]: Math.max(
-        currentMaxAmount ?? 0,
-        newExpenseDetail.amount,
-      ),
+    expenseDetails: [{ id: newId, ...d }, ...(existing?.expenseDetails ?? [])],
+    sumCategoryAmount: {
+      ...(existing?.sumCategoryAmount ?? {}),
+      [d.categoryId]: newSum,
     },
-    maxAmount: Math.max(
-      currentExpense?.maxAmount ?? 0,
-      newExpenseDetail.amount,
-    ),
+    topCategoryId: newSum > topSum ? d.categoryId : existing?.topCategoryId,
     lastId: newId,
   };
 
@@ -94,3 +88,5 @@ export function saveExpenseDetail(newExpenseDetail: Omit<ExpenseDetail, "id">) {
     throw new Error("Failed to save expense detail in storage");
   }
 }
+
+// IMPROVEMENT: Extract calculate infer fields to a reusable function

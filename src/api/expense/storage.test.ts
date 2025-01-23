@@ -55,17 +55,17 @@ describe("saveExpenseDetail", () => {
           amount: 55.5555,
         },
       ],
-      maxCategoryAmount: {
+      sumCategoryAmount: {
         [CategoryId.Accessory]: 55.5555,
       },
-      maxAmount: 55.5555,
+      topCategoryId: CategoryId.Accessory,
       lastId: 0,
     };
 
     expect(getExpense()).toStrictEqual(expected);
   });
 
-  test("should add new expense and update max", () => {
+  test("should add new expense, update sum and update top category ID", () => {
     saveExpenseDetail({
       item: "Item 0",
       categoryId: CategoryId.Food,
@@ -92,19 +92,19 @@ describe("saveExpenseDetail", () => {
           amount: 0.5,
         },
       ],
-      maxCategoryAmount: {
+      sumCategoryAmount: {
         [CategoryId.Food]: 0.5,
         [CategoryId.Accessory]: 999,
       },
-      maxAmount: 999,
+      topCategoryId: CategoryId.Accessory,
       lastId: 1,
     });
 
-    // Add one not affect max
+    // Add one affect top category
     saveExpenseDetail({
       item: "Item 2",
       categoryId: CategoryId.Food,
-      amount: 0.160003,
+      amount: 12500002.3612,
     });
     expect(getExpense()).toStrictEqual({
       expenseDetails: [
@@ -112,7 +112,7 @@ describe("saveExpenseDetail", () => {
           id: 2,
           item: "Item 2",
           categoryId: CategoryId.Food,
-          amount: 0.160003,
+          amount: 12500002.3612,
         },
         {
           id: 1,
@@ -127,19 +127,19 @@ describe("saveExpenseDetail", () => {
           amount: 0.5,
         },
       ],
-      maxCategoryAmount: {
-        [CategoryId.Food]: 0.5,
+      sumCategoryAmount: {
+        [CategoryId.Food]: 12500002.3612 + 0.5,
         [CategoryId.Accessory]: 999,
       },
-      maxAmount: 999,
+      topCategoryId: CategoryId.Food,
       lastId: 2,
     });
 
-    // Add one affect max
+    // Add one NOT affect top category
     saveExpenseDetail({
       item: "Item 3",
       categoryId: CategoryId.Accessory,
-      amount: 12500002.3612,
+      amount: 0.160003,
     });
     expect(getExpense()).toStrictEqual({
       expenseDetails: [
@@ -147,13 +147,13 @@ describe("saveExpenseDetail", () => {
           id: 3,
           item: "Item 3",
           categoryId: CategoryId.Accessory,
-          amount: 12500002.3612,
+          amount: 0.160003,
         },
         {
           id: 2,
           item: "Item 2",
           categoryId: CategoryId.Food,
-          amount: 0.160003,
+          amount: 12500002.3612,
         },
         {
           id: 1,
@@ -168,11 +168,11 @@ describe("saveExpenseDetail", () => {
           amount: 0.5,
         },
       ],
-      maxCategoryAmount: {
-        [CategoryId.Food]: 0.5,
-        [CategoryId.Accessory]: 12500002.3612,
+      sumCategoryAmount: {
+        [CategoryId.Food]: 12500002.3612 + 0.5,
+        [CategoryId.Accessory]: 999 + 0.160003,
       },
-      maxAmount: 12500002.3612,
+      topCategoryId: CategoryId.Food,
       lastId: 3,
     });
 
@@ -194,13 +194,13 @@ describe("saveExpenseDetail", () => {
           id: 3,
           item: "Item 3",
           categoryId: CategoryId.Accessory,
-          amount: 12500002.3612,
+          amount: 0.160003,
         },
         {
           id: 2,
           item: "Item 2",
           categoryId: CategoryId.Food,
-          amount: 0.160003,
+          amount: 12500002.3612,
         },
         {
           id: 1,
@@ -215,12 +215,12 @@ describe("saveExpenseDetail", () => {
           amount: 0.5,
         },
       ],
-      maxCategoryAmount: {
-        [CategoryId.Food]: 0.5,
-        [CategoryId.Accessory]: 12500002.3612,
+      sumCategoryAmount: {
+        [CategoryId.Food]: 12500002.3612 + 0.5,
+        [CategoryId.Accessory]: 999 + 0.160003,
         [CategoryId.Furniture]: 0,
       },
-      maxAmount: 12500002.3612,
+      topCategoryId: CategoryId.Food,
       lastId: 4,
     });
   });
@@ -239,14 +239,14 @@ describe("deleteExpenseDetails", () => {
         {
           id: 0,
           item: "Item",
-          categoryId: CategoryId.Accessory,
+          categoryId: CategoryId.Furniture,
           amount: 55.5555,
         },
       ],
-      maxCategoryAmount: {
-        [CategoryId.Accessory]: 55.5555,
+      sumCategoryAmount: {
+        [CategoryId.Furniture]: 55.5555,
       },
-      maxAmount: 55.5555,
+      topCategoryId: CategoryId.Furniture,
       lastId: 0,
     };
 
@@ -262,14 +262,14 @@ describe("deleteExpenseDetails", () => {
         {
           id: 0,
           item: "Item",
-          categoryId: CategoryId.Accessory,
+          categoryId: CategoryId.Furniture,
           amount: 55.5555,
         },
       ],
-      maxCategoryAmount: {
-        [CategoryId.Accessory]: 55.5555,
+      sumCategoryAmount: {
+        [CategoryId.Furniture]: 55.5555,
       },
-      maxAmount: 55.5555,
+      topCategoryId: CategoryId.Furniture,
       lastId: 0,
     };
 
@@ -319,41 +319,42 @@ describe("deleteExpenseDetails", () => {
           amount: 1,
         },
       ],
-      maxCategoryAmount: {
-        [CategoryId.Accessory]: 55.5555,
+      sumCategoryAmount: {
+        [CategoryId.Food]: 1,
+        [CategoryId.Furniture]: 4560000.05 + 270,
+        [CategoryId.Accessory]: 19.999 + 0.15,
       },
-      maxAmount: 55.5555,
+      topCategoryId: CategoryId.Furniture,
       lastId: 9,
     };
 
     localStorage.setItem(KEY, JSON.stringify(given));
 
-    // Remove non-max Food (8) - should have same max
-    // Remove max Accessory (1) - should have new max
-    // Remove all Furniture (3, 4) - should have NO max left
-
     deleteExpenseDetails([8, 1, 3, 4]);
 
     const actual = getExpense();
 
-    expect(actual?.expenseDetails).toStrictEqual([
-      {
-        id: 9,
-        item: "Item 9",
-        categoryId: CategoryId.Accessory,
-        amount: 0.15,
+    expect(actual).toStrictEqual({
+      expenseDetails: [
+        {
+          id: 9,
+          item: "Item 9",
+          categoryId: CategoryId.Accessory,
+          amount: 0.15,
+        },
+        {
+          id: 0,
+          item: "Item 0",
+          categoryId: CategoryId.Food,
+          amount: 1,
+        },
+      ],
+      sumCategoryAmount: {
+        [CategoryId.Food]: 1,
+        [CategoryId.Accessory]: 0.15,
       },
-      {
-        id: 0,
-        item: "Item 0",
-        categoryId: CategoryId.Food,
-        amount: 1,
-      },
-    ]);
-    expect(actual?.maxCategoryAmount[CategoryId.Food]).toBe(1);
-    expect(actual?.maxCategoryAmount[CategoryId.Accessory]).toBe(0.15);
-    expect(actual?.maxCategoryAmount[CategoryId.Furniture]).toBe(undefined);
-    expect(actual?.maxAmount).toBe(1);
-    expect(actual?.lastId).toBe(9);
+      topCategoryId: CategoryId.Food,
+      lastId: 9,
+    });
   });
 });
