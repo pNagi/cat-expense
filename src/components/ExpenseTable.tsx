@@ -138,7 +138,11 @@ export function ExpenseTable({
                   {t.categories[categoryId]}
                 </span>
               </td>
-              <td className={"text-right"}>{formatter.format(amount)}</td>
+              <td className={"text-right"}>
+                <div className="tooltip" data-tip={amount}>
+                  <span>{formatter.format(amount)}</span>
+                </div>
+              </td>
               <td>{topCategoryId === categoryId ? t.max : null}</td>
             </tr>
           ))}
