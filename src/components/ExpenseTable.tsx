@@ -5,7 +5,10 @@ import { CategoryId, Expense } from "../api/expense/schema";
 import { t } from "../translations";
 
 interface ExpenseTableProps
-  extends Pick<Expense, "expenseDetails" | "topCategoryId"> {
+  extends Pick<
+    Expense,
+    "expenseDetails" | "sumCategoryAmount" | "topSumCategoryAmount"
+  > {
   isLoading: boolean;
 }
 
@@ -34,7 +37,8 @@ const badgeColors = {
 
 export function ExpenseTable({
   expenseDetails,
-  topCategoryId,
+  sumCategoryAmount,
+  topSumCategoryAmount,
   isLoading,
 }: ExpenseTableProps) {
   const [state, setState] = useState<State>(initialState);
@@ -117,7 +121,9 @@ export function ExpenseTable({
               key={id}
               className={twMerge(
                 ["hover:bg-orange-50"],
-                topCategoryId === categoryId && ["bg-yellow-50"],
+                topSumCategoryAmount === sumCategoryAmount[categoryId] && [
+                  "bg-yellow-50",
+                ],
               )}
             >
               <th>
@@ -143,7 +149,11 @@ export function ExpenseTable({
                   <span>{formatter.format(amount)}</span>
                 </div>
               </td>
-              <td>{topCategoryId === categoryId ? t.max : null}</td>
+              <td>
+                {topSumCategoryAmount === sumCategoryAmount[categoryId]
+                  ? t.max
+                  : null}
+              </td>
             </tr>
           ))}
         </tbody>

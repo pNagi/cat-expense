@@ -58,7 +58,7 @@ describe("saveExpenseDetail", () => {
       sumCategoryAmount: {
         [CategoryId.Accessory]: 55.5555,
       },
-      topCategoryId: CategoryId.Accessory,
+      topSumCategoryAmount: 55.5555,
       lastId: 0,
     };
 
@@ -96,7 +96,7 @@ describe("saveExpenseDetail", () => {
         [CategoryId.Food]: 0.5,
         [CategoryId.Accessory]: 999,
       },
-      topCategoryId: CategoryId.Accessory,
+      topSumCategoryAmount: 999,
       lastId: 1,
     });
 
@@ -131,7 +131,7 @@ describe("saveExpenseDetail", () => {
         [CategoryId.Food]: 12500002.3612 + 0.5,
         [CategoryId.Accessory]: 999,
       },
-      topCategoryId: CategoryId.Food,
+      topSumCategoryAmount: 12500002.3612 + 0.5,
       lastId: 2,
     });
 
@@ -172,7 +172,7 @@ describe("saveExpenseDetail", () => {
         [CategoryId.Food]: 12500002.3612 + 0.5,
         [CategoryId.Accessory]: 999 + 0.160003,
       },
-      topCategoryId: CategoryId.Food,
+      topSumCategoryAmount: 12500002.3612 + 0.5,
       lastId: 3,
     });
 
@@ -220,7 +220,7 @@ describe("saveExpenseDetail", () => {
         [CategoryId.Accessory]: 999 + 0.160003,
         [CategoryId.Furniture]: 0,
       },
-      topCategoryId: CategoryId.Food,
+      topSumCategoryAmount: 12500002.3612 + 0.5,
       lastId: 4,
     });
   });
@@ -246,7 +246,7 @@ describe("deleteExpenseDetails", () => {
       sumCategoryAmount: {
         [CategoryId.Furniture]: 55.5555,
       },
-      topCategoryId: CategoryId.Furniture,
+      topSumCategoryAmount: 55.5555,
       lastId: 0,
     };
 
@@ -269,7 +269,7 @@ describe("deleteExpenseDetails", () => {
       sumCategoryAmount: {
         [CategoryId.Furniture]: 55.5555,
       },
-      topCategoryId: CategoryId.Furniture,
+      topSumCategoryAmount: 55.5555,
       lastId: 0,
     };
 
@@ -324,7 +324,7 @@ describe("deleteExpenseDetails", () => {
         [CategoryId.Furniture]: 4560000.05 + 270,
         [CategoryId.Accessory]: 19.999 + 0.15,
       },
-      topCategoryId: CategoryId.Furniture,
+      topSumCategoryAmount: 4560000.05 + 270,
       lastId: 9,
     };
 
@@ -353,7 +353,7 @@ describe("deleteExpenseDetails", () => {
         [CategoryId.Food]: 1,
         [CategoryId.Accessory]: 0.15,
       },
-      topCategoryId: CategoryId.Food,
+      topSumCategoryAmount: 1,
       lastId: 9,
     });
   });

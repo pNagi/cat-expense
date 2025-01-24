@@ -81,7 +81,8 @@ export function ExpensePage() {
           {/* Table */}
           <ExpenseTable
             expenseDetails={expense.data?.expenseDetails ?? []}
-            topCategoryId={expense.data?.topCategoryId}
+            sumCategoryAmount={expense.data?.sumCategoryAmount ?? {}}
+            topSumCategoryAmount={expense.data?.topSumCategoryAmount ?? 0}
             isLoading={expense.isLoading || deleteForm.isPending}
           />
         </div>

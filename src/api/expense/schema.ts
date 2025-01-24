@@ -33,7 +33,7 @@ export interface Expense {
   expenseDetails: ExpenseDetail[];
   // Infer fields
   sumCategoryAmount: Record<number, number | undefined>;
-  topCategoryId?: number | undefined;
+  topSumCategoryAmount: number;
   lastId: number;
 }
 

@@ -8,7 +8,7 @@ import { ExpenseTable } from "./ExpenseTable";
 const meta: Meta<typeof ExpenseTable> = {
   title: "Expense / ExpenseTable",
   component: ExpenseTable,
-  args: { expenseDetails: [], topCategoryId: undefined },
+  args: { expenseDetails: [], topSumCategoryAmount: 0 },
 };
 
 export default meta;
@@ -26,16 +26,14 @@ const expenseDetails: Expense["expenseDetails"] = faker.helpers
 
 const sumCategoryAmount: Expense["sumCategoryAmount"] = {};
 
-let topCategoryId: number | undefined = undefined;
+let topSumCategoryAmount = 0;
 
 expenseDetails.forEach((d) => {
   const newSum = (sumCategoryAmount[d.categoryId] ?? 0) + d.amount;
 
   sumCategoryAmount[d.categoryId] = newSum;
 
-  if (newSum > (sumCategoryAmount[topCategoryId ?? -1] ?? -1)) {
-    topCategoryId = d.categoryId;
-  }
+  topSumCategoryAmount = Math.max(topSumCategoryAmount, newSum);
 });
 
 export const Empty: Story = {
@@ -47,9 +45,9 @@ export const EmptyLoading: Story = {
 };
 
 export const WithValue: Story = {
-  args: { expenseDetails, topCategoryId },
+  args: { expenseDetails, topSumCategoryAmount },
 };
 
 export const WithValueLoading: Story = {
-  args: { expenseDetails, topCategoryId, isLoading: true },
+  args: { expenseDetails, topSumCategoryAmount, isLoading: true },
 };

@@ -14,7 +14,7 @@ export function deleteExpenseDetails(expenseDetailIds: number[]) {
   const newExpense: Expense = {
     expenseDetails: [],
     sumCategoryAmount: {},
-    topCategoryId: undefined,
+    topSumCategoryAmount: 0,
     lastId: currentExpense.lastId,
   };
 
@@ -24,14 +24,12 @@ export function deleteExpenseDetails(expenseDetailIds: number[]) {
 
       const newSum =
         (newExpense.sumCategoryAmount[d.categoryId] ?? 0) + d.amount;
-      const topSum =
-        newExpense.sumCategoryAmount[newExpense.topCategoryId ?? -1] ?? -1;
 
       newExpense.sumCategoryAmount[d.categoryId] = newSum;
-
-      if (newSum > topSum) {
-        newExpense.topCategoryId = d.categoryId;
-      }
+      newExpense.topSumCategoryAmount = Math.max(
+        newExpense.topSumCategoryAmount,
+        d.amount,
+      );
     }
   });
 
@@ -66,8 +64,6 @@ export function saveExpenseDetail(d: Omit<ExpenseDetail, "id">) {
 
   const newId = (existing?.lastId ?? -1) + 1;
   const newSum = (existing?.sumCategoryAmount[d.categoryId] ?? 0) + d.amount;
-  const topSum =
-    existing?.sumCategoryAmount[existing.topCategoryId ?? -1] ?? -1;
 
   const newExpense: Expense = {
     expenseDetails: [{ id: newId, ...d }, ...(existing?.expenseDetails ?? [])],
@@ -75,7 +71,7 @@ export function saveExpenseDetail(d: Omit<ExpenseDetail, "id">) {
       ...(existing?.sumCategoryAmount ?? {}),
       [d.categoryId]: newSum,
     },
-    topCategoryId: newSum > topSum ? d.categoryId : existing?.topCategoryId,
+    topSumCategoryAmount: Math.max(existing?.topSumCategoryAmount ?? 0, newSum),
     lastId: newId,
   };
 
