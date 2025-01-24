@@ -8,14 +8,14 @@ export const t = {
   expenseDetail: {
     item: {
       label: "Item",
-      placeholder: "Ramen",
+      placeholder: "Example: Ramen",
     },
     category: {
       label: "Category",
     },
     amount: {
       label: "Amount (USD)",
-      placeholder: "10",
+      placeholder: "Enter an amount",
     },
   },
   max: "🐈",
