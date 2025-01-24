@@ -60,22 +60,31 @@ export function ExpensePage() {
         <ModalCloseButton onClick={closeModal} />
       </Modal>
       {/* Delete Form */}
-      <form action={deleteForm.action} className="mx-auto max-w-screen-md">
-        {/* Header */}
-        <div className="flex gap-4 py-12">
-          {/* Add Button */}
-          <button className="btn btn-primary" type="button" onClick={showModal}>
-            {t.addButton.text}
-          </button>
-          {/* Delete Button */}
-          <SubmitButton className="btn-outline" text={t.deleteButton.text} />
+      <form
+        action={deleteForm.action}
+        className="relative mx-auto max-h-screen"
+      >
+        <div className="mx-auto max-w-screen-md md:px-4">
+          {/* Header */}
+          <div className="flex gap-4 px-4 py-12 md:px-0">
+            {/* Add Button */}
+            <button
+              className="btn btn-primary"
+              type="button"
+              onClick={showModal}
+            >
+              {t.addButton.text}
+            </button>
+            {/* Delete Button */}
+            <SubmitButton className="btn-outline" text={t.deleteButton.text} />
+          </div>
+          {/* Table */}
+          <ExpenseTable
+            expenseDetails={expense.data?.expenseDetails ?? []}
+            topCategoryId={expense.data?.topCategoryId}
+            isLoading={expense.isLoading || deleteForm.isPending}
+          />
         </div>
-        {/* Table */}
-        <ExpenseTable
-          expenseDetails={expense.data?.expenseDetails ?? []}
-          topCategoryId={expense.data?.topCategoryId}
-          isLoading={expense.isLoading || deleteForm.isPending}
-        />
       </form>
     </>
   );

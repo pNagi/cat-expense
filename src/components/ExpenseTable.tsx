@@ -88,7 +88,7 @@ export function ExpenseTable({
   }, [expenseDetails.length]);
 
   return (
-    <div className="min-h-96 w-full">
+    <>
       <table className="table w-full table-fixed">
         <thead className="bg-zinc-100">
           <tr>
@@ -103,11 +103,11 @@ export function ExpenseTable({
                 />
               </label>
             </th>
-            <th className="w-2/4">
+            <th className="w-3/6">
               <span>{t.expenseDetail.item.label}</span>
             </th>
-            <th className="w-1/4">{t.expenseDetail.category.label}</th>
-            <th className="w-1/4 text-right">{t.expenseDetail.amount.label}</th>
+            <th className="w-1/6">{t.expenseDetail.category.label}</th>
+            <th className="w-2/6 text-right">{t.expenseDetail.amount.label}</th>
             <th className="w-16"></th>
           </tr>
         </thead>
@@ -149,6 +149,6 @@ export function ExpenseTable({
           <span className="loading loading-spinner"></span>
         </div>
       ) : null}
-    </div>
+    </>
   );
 }
